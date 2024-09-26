@@ -5,79 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Notas</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 20px;
         }
-        input {
-            margin: 5px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .input-row input {
+            width: 70px;
             padding: 10px;
-            width: 50px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
             padding: 10px 20px;
-            margin: 5px;
+            font-size: 1em;
             background-color: #4CAF50;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
         }
+        .result {
+            font-size: 1.2em;
+            margin-top: 20px;
+            background-color: #e9ffe9;
+            padding: 15px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>Calculadora de Notas</h1>
+    <div class="container">
+        <h1>Calculadora de Notas</h1>
 
-    <h2>Atividades Processuais (Peso 40%)</h2>
-    <div id="processuais">
-        <input type="number" class="nota-processual" placeholder="Nota 1">
+        <div class="input-section">
+            <h2>Atividades Processuais (Peso 40%)</h2>
+            <div id="processuais">
+                <div class="input-row">
+                    <input type="number" class="nota-processual" placeholder="Nota 1">
+                </div>
+            </div>
+            <button onclick="adicionarProcessual()">Adicionar Atividade Processual</button>
+        </div>
+
+        <div class="input-section">
+            <h2>Atividades de Síntese (Peso 60%)</h2>
+            <div id="sintese">
+                <div class="input-row">
+                    <input type="number" class="nota-sintese" placeholder="Nota 1">
+                </div>
+            </div>
+            <button onclick="adicionarSintese()">Adicionar Atividade de Síntese</button>
+        </div>
+
+        <div class="input-section">
+            <button onclick="calcularNotaFinal()">Calcular Nota Final</button>
+            <div id="resultado" class="result"></div>
+        </div>
     </div>
-    <button onclick="adicionarProcessual()">Adicionar Atividade Processual</button>
-
-    <h2>Atividades de Síntese (Peso 60%)</h2>
-    <div id="sintese">
-        <input type="number" class="nota-sintese" placeholder="Nota 1">
-    </div>
-    <button onclick="adicionarSintese()">Adicionar Atividade de Síntese</button>
-
-    <h2>Resultado</h2>
-    <button onclick="calcularNotaFinal()">Calcular Nota Final</button>
-    <p id="resultado"></p>
 
     <script>
+        // Função para adicionar mais campos de notas processuais
         function adicionarProcessual() {
-            var div = document.createElement('div');
-            div.innerHTML = '<input type="number" class="nota-processual" placeholder="Nota ' + (document.querySelectorAll('.nota-processual').length + 1) + '">';
-            document.getElementById('processuais').appendChild(div);
+            const container = document.getElementById('processuais');
+            const index = container.querySelectorAll('.nota-processual').length + 1;
+            const newInput = document.createElement('div');
+            newInput.classList.add('input-row');
+            newInput.innerHTML = `<input type="number" class="nota-processual" placeholder="Nota ${index}">`;
+            container.appendChild(newInput);
         }
 
+        // Função para adicionar mais campos de notas de síntese
         function adicionarSintese() {
-            var div = document.createElement('div');
-            div.innerHTML = '<input type="number" class="nota-sintese" placeholder="Nota ' + (document.querySelectorAll('.nota-sintese').length + 1) + '">';
-            document.getElementById('sintese').appendChild(div);
+            const container = document.getElementById('sintese');
+            const index = container.querySelectorAll('.nota-sintese').length + 1;
+            const newInput = document.createElement('div');
+            newInput.classList.add('input-row');
+            newInput.innerHTML = `<input type="number" class="nota-sintese" placeholder="Nota ${index}">`;
+            container.appendChild(newInput);
         }
 
+        // Função para calcular a nota final
         function calcularNotaFinal() {
             // Coletar as notas processuais
-            var notasProcessuais = document.querySelectorAll('.nota-processual');
-            var somaProcessual = 0;
-            for (var i = 0; i < notasProcessuais.length; i++) {
-                somaProcessual += parseFloat(notasProcessuais[i].value) || 0;
+            const notasProcessuais = document.querySelectorAll('.nota-processual');
+            let somaProcessual = 0;
+            let qtdProcessual = 0;
+            for (let i = 0; i < notasProcessuais.length; i++) {
+                const nota = parseFloat(notasProcessuais[i].value);
+                if (!isNaN(nota)) {
+                    somaProcessual += nota;
+                    qtdProcessual++;
+                }
             }
-            var mediaProcessual = somaProcessual / notasProcessuais.length;
+            const mediaProcessual = qtdProcessual ? somaProcessual / qtdProcessual : 0;
 
             // Coletar as notas de síntese
-            var notasSintese = document.querySelectorAll('.nota-sintese');
-            var somaSintese = 0;
-            for (var i = 0; i < notasSintese.length; i++) {
-                somaSintese += parseFloat(notasSintese[i].value) || 0;
+            const notasSintese = document.querySelectorAll('.nota-sintese');
+            let somaSintese = 0;
+            let qtdSintese = 0;
+            for (let i = 0; i < notasSintese.length; i++) {
+                const nota = parseFloat(notasSintese[i].value);
+                if (!isNaN(nota)) {
+                    somaSintese += nota;
+                    qtdSintese++;
+                }
             }
-            var mediaSintese = somaSintese / notasSintese.length;
+            const mediaSintese = qtdSintese ? somaSintese / qtdSintese : 0;
 
             // Calcular a nota final
-            var notaFinal = (mediaProcessual * 0.4) + (mediaSintese * 0.6);
+            const notaFinal = (mediaProcessual * 0.4) + (mediaSintese * 0.6);
 
             // Exibir o resultado
             document.getElementById('resultado').innerText = "Sua nota final é: " + notaFinal.toFixed(2);
