@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input {
+            margin: 5px;
+            padding: 10px;
+            width: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Notas</h1>
+
+    <h2>Atividades Processuais (Peso 40%)</h2>
+    <div id="processuais">
+        <input type="number" class="nota-processual" placeholder="Nota 1">
+    </div>
+    <button onclick="adicionarProcessual()">Adicionar Atividade Processual</button>
+
+    <h2>Atividades de Síntese (Peso 60%)</h2>
+    <div id="sintese">
+        <input type="number" class="nota-sintese" placeholder="Nota 1">
+    </div>
+    <button onclick="adicionarSintese()">Adicionar Atividade de Síntese</button>
+
+    <h2>Resultado</h2>
+    <button onclick="calcularNotaFinal()">Calcular Nota Final</button>
+    <p id="resultado"></p>
+
+    <script>
+        function adicionarProcessual() {
+            var div = document.createElement('div');
+            div.innerHTML = '<input type="number" class="nota-processual" placeholder="Nota ' + (document.querySelectorAll('.nota-processual').length + 1) + '">';
+            document.getElementById('processuais').appendChild(div);
+        }
+
+        function adicionarSintese() {
+            var div = document.createElement('div');
+            div.innerHTML = '<input type="number" class="nota-sintese" placeholder="Nota ' + (document.querySelectorAll('.nota-sintese').length + 1) + '">';
+            document.getElementById('sintese').appendChild(div);
+        }
+
+        function calcularNotaFinal() {
+            // Coletar as notas processuais
+            var notasProcessuais = document.querySelectorAll('.nota-processual');
+            var somaProcessual = 0;
+            for (var i = 0; i < notasProcessuais.length; i++) {
+                somaProcessual += parseFloat(notasProcessuais[i].value) || 0;
+            }
+            var mediaProcessual = somaProcessual / notasProcessuais.length;
+
+            // Coletar as notas de síntese
+            var notasSintese = document.querySelectorAll('.nota-sintese');
+            var somaSintese = 0;
+            for (var i = 0; i < notasSintese.length; i++) {
+                somaSintese += parseFloat(notasSintese[i].value) || 0;
+            }
+            var mediaSintese = somaSintese / notasSintese.length;
+
+            // Calcular a nota final
+            var notaFinal = (mediaProcessual * 0.4) + (mediaSintese * 0.6);
+
+            // Exibir o resultado
+            document.getElementById('resultado').innerText = "Sua nota final é: " + notaFinal.toFixed(2);
+        }
+    </script>
+</body>
+</html>
